@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template: `
   <nav class="navbar navbar-default bg-faded">
     <div class="container">
-      <a class="navbar-brand center" href="#">Rental Agreement</a>
+      <a class="navbar-brand center" href="#">PeerBuds Task</a>
       <a href="/" class="btn btn-primary navbar-btn pull-right"> Home</a>
 
     </div>

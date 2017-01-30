@@ -4,28 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule }  from './app-routing.module';
-import { AgmtRoutingModule } from './agmt-routing.module';
-import { AgmtEditRoutingModule } from './agmtedit-routing.module';
+import { UserRoutingModule } from './user-routing.module';
+
 
 import { MyAppComponent } from './myapp.component';
 import { AppComponent } from './app.component';
-import { AgmtComponent } from './agmt.component';
-import { AgmtEditComponent } from './agmtedit.component';
+import { UserComponent } from './user.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    AgmtComponent,
+    UserComponent,
     MyAppComponent,
-    AgmtEditComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    AgmtRoutingModule,
+    UserRoutingModule,
     AppRoutingModule,
-    AgmtEditRoutingModule
   ],
   providers: [
 

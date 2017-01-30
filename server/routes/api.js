@@ -5,137 +5,64 @@ const express = require('express');
 const router = express.Router();
 
 // MongoDB URL from the docker-compose file
-const dbHost = 'mongodb://localhost/rental-agreement';
-//const dbHost = 'mongodb://bipinswarn:bipinswarn@ds127439.mlab.com:27439/heroku_130w5s9k';
+const dbHost = 'mongodb://localhost/peerbuds';
+
 // Connect to mongodb
 mongoose.connect(dbHost);
 
 // create mongoose schema
-const agreementSchema = new mongoose.Schema({
-  tenant_name:{
-    type:String,
-    required:'Name cannot be left blank'
-  },
-  tenant_fathers_name:String,
-  tenant_mobile:{
-    type:Number,
-    required:'Mobile cannot be left blank'
-  },
-  tenant_address:{
-    type:String,
-    required:'Address cannot be left blank'
-  },
-  owner_name:{
-    type:String,
-    required:'Name cannot be left blank'
-  },
-  owner_fathers_name:String,
-  owner_mobile:{
-    type:Number,
-    required:'Mobile cannot be left blank'
-  },
-  owner_address:{
-    type:String,
-    required:'Address cannot be left blank'
-  },
-  monthly_rent:{
-    type:Number,
-    required:'Monthly rent amoount cannot be left blank'
-  },
-  security_deposit:{
-    type:Number,
-    required:'Monthly rent amoount cannot be left blank'
-  },
-  renting_date:{
-    type:Date
-  },
-  lease_period:{
-    type :String,
-    required:'Lease period is required'
-  },
-  created:{
-		type:Date,
-		default:Date.now
-	}
-
+const userSchema = new mongoose.Schema({
+    "Id" : String,
+    "Reputation" : String,
+    "CreationDate" : String,
+    "DisplayName" : String,
+    "LastAccessDate" : Date,
+    "WebsiteUrl" : String,
+    "Location" : String,
+    "AboutMe" : String,
+    "Views" : String,
+    "UpVotes" : String,
+    "DownVotes" : String,
+    "ProfileImageUrl" : String,
+    "Age" : String,
+    "AccountId" : String,
+    created:{
+      type:Date,
+      default:Date.now
+    }
 
 });
 
 // create mongoose model
-const Agreement = mongoose.model('Agreement', agreementSchema);
+const User = mongoose.model('User', userSchema);
 
 
 
 /* GET all users. */
-router.get('/agreement', (req, res) => {
-	Agreement.find({}, (err, agmt) => {
+router.get('/users', (req, res) => {
+	User.find({}).limit(100).exec( (err, user) => {
 		if (err) return res.status(500).json(err)
 
-		return res.json(agmt);
+		return res.json(user);
 	});
 });
 
 /* GET one users. */
-router.get('/agreement/:id', (req, res) => {
-	Agreement.findById(req.params.id, (err, agmt) => {
+router.get('/users/:name', (req, res) => {
+  const userName =  req.params.name.replace(/-/g, " ");
+  console.log(userName);
+	User.findOne({DisplayName:userName}, (err, user) => {
 		if (err) return res.status(500).json(err)
-    console.log(req.params.id);
-		res.status(200).json(agmt);
-	});
-});
+    console.log(user);
 
-/* GET one users. */
-router.delete('/agreement/:id', (req, res) => {
-	Agreement.findById(req.params.id, (err, agmt) => {
-		if (err) return res.status(500).json(err)
-    agmt.remove((err,agmt) => {
-      	if (err) return res.status(500).json(err);
+    User.find({_id:{$ne:user._id},$or : [{Location:user.Location},{Reputation:user.Reputation}]}).limit(100).exec((err,u)=>{
+      if(err) return res.json(err);
 
-      console.log(req.params.id);
-      res.status(200).json({message:'Agreement deleted successfully'});
-    });
+      return res.send({user:user,users:u});
+    })
 
 	});
 });
 
-/* GET one users. */
-router.put('/agreement/:id', (req, res) => {
-	Agreement.findById(req.params.id, (err, agmt) => {
-		if (err) return res.status(500).json(err)
-    console.log(agmt);
-    agmt.tenant_name = req.body.tenant_name;
-    agmt.tenant_fathers_name = req.body.tenant_fathers_name;
-    agmt.tenant_mobile = req.body.tenant_mobile;
-    agmt.tenant_address = req.body.tenant_address;
-    agmt.owner_name = req.body.owner_name;
-    agmt.owner_fathers_name = req.body.owner_fathers_name;
-    agmt.owner_mobile = req.body.owner_mobile;
-    agmt.owner_address = req.body.owner_address;
-    agmt.monthly_rent = req.body.monthly_rent;
-    agmt.security_deposit = req.body.security_deposit;
-    agmt.renting_date = req.body.renting_date;
-    agmt.lease_period = req.body.lease_period;
-    agmt.save((err) => {
-      	if (err) return res.status(500).json(err);
-
-      console.log(req.params.id);
-      res.status(200).json({message:'Agreement updated successfully'});
-    });
-
-	});
-});
-
-/* Create a user. */
-router.post('/agreement', (req, res) => {
-	let agreement = new Agreement(req.body);
-  console.log(req.body);
-	agreement.save(error => {
-		if (error) return res.status(500).json(error);
-
-		res.status(201).json({
-			message: 'Agreement created successfully'
-		});
-	});
-});
 
 module.exports = router;

@@ -18,52 +18,37 @@ export class MyAppComponent {
 
 
   // Link to our api, pointing to localhost
- API = 'http://localhost:3000';
+ API = '';
 
  // Declare empty list of agreements
-  agmts: any[] = [];
-  private message: string;
+  users: any[] = [];
   constructor(private http: Http) {}
 
  // Angular 2 Life Cycle event when component has been initialized
  ngOnInit() {
-   this.getAllAgmts();
+   this.getAllUsers();
 
  }
 
  // Get all agreements from the API
- getAllAgmts() {
-   this.http.get(`${this.API}/agreement`)
+ getAllUsers() {
+   this.http.get(`${this.API}/users`)
      .map(res => res.json())
-     .subscribe(agmts => {
-       console.log(agmts)
-       this.agmts = agmts
+     .subscribe(users => {
+       console.log(users)
+       this.users = users;
      })
  }
 
- //Delete one agreement from the api
- deleteAgmt(id){
-      if(confirm("Are you sure want to delete?")){
-      this.http.delete(`${this.API}/agreement/${id}`)
-        .map(res => res.json())
-        .subscribe(() => {
-          this.getAllAgmts();
-        })
-      }
+ dateFormat(d){
+      return d;
+ }
+
+ CreateUserName(u){
+     return u.replace(/ /g, "-");
  }
 
 
-
- // Add one agreement to the API
- addAgmt(tenant_name,tenant_fathers_name,owner_name, owner_fathers_name,tenant_mobile,tenant_address,owner_mobile,owner_address,monthly_rent,security_deposit,renting_date,lease_period) {
-   this.http.post(`${this.API}/agreement`, {tenant_name,tenant_fathers_name,owner_name, owner_fathers_name,tenant_mobile,tenant_address,owner_mobile,owner_address,monthly_rent,security_deposit,renting_date,lease_period})
-     .map(res => res.json())
-     .subscribe(() => {
-       this.getAllAgmts();
-       this.message = "Agreement Added Successfully";
-
-     })
- }
 
 
 }
