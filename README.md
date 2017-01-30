@@ -5,6 +5,7 @@ This project was generated with [angular-cli](https://github.com/angular/angular
 ## Development server setup
 1. Start your mongoDB first : Ex-  /Users/bipinswarnkar/mongodb/bin/mongod --dbpath="/Users/bipinswarnkar/Node-js-worspace/data
 2. Download Zip and go inside root of app: cd PeerBudsTask1
+3. Run "node insertion"   to insert xml data to mongoDB.  
 3. Run ng build --aot -prod 
 3. Run :  npm install & npm start in new terminal.
 4. Go http://localhost:3000/
